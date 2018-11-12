@@ -1,0 +1,28 @@
+{
+  "name": "@olian/github-readme",
+  "version": "1.0.0",
+  "description": "A custom element that renders the readme of a github repository",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Olian04/github-readme.git"
+  },
+  "keywords": [
+    "github",
+    "markdown",
+    "md",
+    "git",
+    "readme",
+    "custom",
+    "element"
+  ],
+  "author": "Olian04",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Olian04/github-readme/issues"
+  },
+  "homepage": "https://github.com/Olian04/github-readme#readme"
+}
