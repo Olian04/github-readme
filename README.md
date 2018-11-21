@@ -18,7 +18,7 @@ A custom element that renders the readme of a github repository
     branch="master"
     index="/README.md"
     cache="jit"
-    persist="true"
+    persist="false"
     links="internal"
     history="true"
     breadcrumbs="false"
