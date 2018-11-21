@@ -18,6 +18,7 @@ A custom element that renders the readme of a github repository
     branch="master"
     index="/README.md"
     cache="jit"
+    persist="true"
     links="internal"
     history="true"
     breadcrumbs="false"
@@ -35,6 +36,7 @@ repository |  | The name of the github repository you want to display
 branch | master | The name of the git branch you want to display
 index | /README.md | The path to the index file. Supported file extensions are `.html` & `.md`
 cache | jit | The caching mode you want to use. __jit__ will cache assets as they are loaded. __pre__ will traverse links and cache all assets on page load. __index__ will only cache the README.md file and its direct assets. __none__ will turn off caching.
+persist | false | Will reload the current page on page reload instead of returning to the index page
 links | internal | The navigation mode you want to use. __external__ will allow navigation through links in the readme. __internal__ will allow navigation through links in the readme, limited to links within the same repository.  __none__ will disallow navigating away from the readme.
 history | true | Adds a backwards and forwards button to the top of the renderer.
 breadcrumbs | false | Adds a breadcrumbs navigation bar to the top of the renderer. The crumbs will display the file hierarchy from the root to where the current file you're watching is located.
