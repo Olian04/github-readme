@@ -59,10 +59,11 @@ window.customElements.define('github-readme', class extends HTMLElement {
     }
 
 		constructUrl(assetURI) {
-    	/*const url = `https://api.github.com/repos/${this.getAttribute('user')}/${this.getAttribute('repository')}/contents/${assetURI}?ref=${this.getAttribute('branch')}`*/
-    	const url = `https://raw.githubusercontent.com/${
-        		['user','repository','branch'].map(s => this.getAttribute(s)).join('/')
-          }/${assetURI}`;
+    	const url = `https://api.github.com/repos/${
+      	this.getAttribute('user')}/${
+        this.getAttribute('repository')}/contents/${
+        assetURI}?ref=${
+        this.getAttribute('branch')}`;
       return url;
     }
     fetchAsset(assetURI) {
@@ -71,9 +72,10 @@ window.customElements.define('github-readme', class extends HTMLElement {
         
         switch(assetType) {
             case 'md':
-                fetch(url).then(res => res.text()).then(body =>
-                    this.renderMarkdown(body)
-                );
+                fetch(url).then(res => res.json()).then(body => {
+                		const strBody = atob(body.content);
+                    this.renderMarkdown(strBody);
+                });
                 break;
         }
     }
@@ -81,10 +83,26 @@ window.customElements.define('github-readme', class extends HTMLElement {
         this.renderer.innerHTML = this.converter.makeHtml(md);
         this.renderer.querySelectorAll("img,a").forEach(el => {
           if (el.getAttribute('src') && !el.getAttribute('src').startsWith('http')) {
-            el.setAttribute('src', this.constructUrl(el.getAttribute('src')));
+          	fetch(this.constructUrl(el.getAttribute('src')))
+            	.then(res => res.json())
+              .then(body => {
+            	el.setAttribute('src', `data:img/png;base64,${body.content}`);
+            });
           }
-          if (el.getAttribute('href') && !el.getAttribute('href').startsWith('http')) {
-            el.setAttribute('href', this.constructUrl(el.getAttribute('href')));
+          if (el.getAttribute('href')) {
+          	if (el.getAttribute('href').startsWith('http')) {
+            	// External path
+              el.onclick = (ev) => {
+                ev.preventDefault();
+                window.open(el.getAttribute('href'),'noopener');
+              }
+            } else {
+            	// Relative path
+              el.onclick = (ev) => {
+                ev.preventDefault();
+                this.fetchAsset(el.getAttribute('href'));
+              }
+            }
           }
         });
     }
