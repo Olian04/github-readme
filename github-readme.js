@@ -194,7 +194,6 @@ window.customElements.define('github-readme', class extends HTMLElement {
             this.converter = new showdown.Converter();
             this.converter.setOption('tables', true);
             this.converter.setOption('ghCodeBlocks', true);
-            this.converter.setOption('ghMentions', true);
             this.converter.setOption('emoji', true);
             this.history = window.History.createMemoryHistory();
             this.history.listen((location, action) => {
