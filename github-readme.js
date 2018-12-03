@@ -14,6 +14,7 @@ window.customElements.define('github-readme', class extends HTMLElement {
         historyScript.src = 'https://unpkg.com/history/umd/history.min.js';
         historyScript.async = false;
         const root = document.createElement('div');
+        root.className = 'root';
         const githubStyles = document.createElement('link');
         githubStyles.rel = 'stylesheet';
         githubStyles.href = 'https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.10.0/github-markdown.min.css';
@@ -24,6 +25,25 @@ window.customElements.define('github-readme', class extends HTMLElement {
           dark: '#4F4F4F'
         }
         style.appendChild(document.createTextNode(`
+           :host {
+             display: block;
+             height: calc(100vh - 25px);
+             width: 100%;
+             padding: 0px;
+             margin: 0px;
+           }
+        	 .root {
+           	 position: relative;
+             height: 100%;
+             padding: 0px;
+             margin: 0px;
+           }
+           .markdown-body {
+           	 position: absolute;
+             overflow-y: auto;
+             height: calc(100% - 25px);
+             width: 100%;
+           }
            button {
              background: ${color.dark};
              border: 1px white solid;
@@ -112,8 +132,8 @@ window.customElements.define('github-readme', class extends HTMLElement {
           bookmarks.className = 'bookmarks';
           this.navigation.append(bookmarks);
         	
-          this.getAttribute('bookmarks')
-            .split(';')
+        	this.getAttribute('bookmarks')
+          	.split(';')
             .reduce((res, v) => v ? [...res, v] : res, [])
             .map(md => {
             	// [License](/LICENSE);[Demo](/index.html)
@@ -121,12 +141,12 @@ window.customElements.define('github-readme', class extends HTMLElement {
               return [match.groups.title, match.groups.path];
             })
             .forEach(([title, path]) => {
-              const bookmark = document.createElement('button');
+            	const bookmark = document.createElement('button');
               bookmark.innerText = title;
               bookmark.onclick = () => {
               	if (this.history.entries[this.history.index].pathname === path) {
-                  // Don't need to navigate to the page you're already on
-                  return;
+                	// Don't need to navigate to the page you're already on
+                	return;
                 }
               	this.history.push(path);
               }
