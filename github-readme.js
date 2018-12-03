@@ -24,6 +24,24 @@ window.customElements.define('github-readme', class extends HTMLElement {
           dark: '#4F4F4F'
         }
         style.appendChild(document.createTextNode(`
+           button {
+             background: ${color.dark};
+             border: 1px white solid;
+             color: white;
+           }
+           button:hover {
+             border: 1px ${color.dark} solid;
+             color: ${color.dark};
+             background: transparent;
+           }
+           button:disabled {
+            background: ${color.light};
+           }
+           button:disabled :hover {
+             border: 1px white solid;
+             color: white;
+             background: ${color.light};
+           }
         	nav {
           	position: relative;
             height: 25px;
@@ -38,7 +56,6 @@ window.customElements.define('github-readme', class extends HTMLElement {
          nav .history {
            position: relative;
            height: 100%;
-           width: 100px;
          }
          nav .history button {
          	 position: relative;
@@ -46,22 +63,18 @@ window.customElements.define('github-readme', class extends HTMLElement {
            width: 25px;
            border-radius: 50%;
            margin-left: 2px;
-         	 background: ${color.dark};
-           border: 1px white solid;
-           color: white;
          }
-         nav .history button:hover {
-           border: 1px ${color.dark} solid;
-           color: ${color.dark};
-           background: transparent;
+         nav .bookmarks {
+         	 position: relative;
+           margin-left: 5px;
+           padding-left: 5px;
+           border-left: 1px ${color.light} solid;
          }
-         nav .history button:disabled {
-         	background: ${color.light};
-         }
-         nav .history button:disabled:hover {
-           border: 1px white solid;
-           color: white;
-           background: ${color.light};
+         nav .bookmarks button {
+         	 position: relative;
+           height: 25px;
+           border-radius: 20px;
+           margin-left: 2px;
          }
         `));
         // TODO: Add bookmarks
@@ -70,7 +83,7 @@ window.customElements.define('github-readme', class extends HTMLElement {
         if (this.getAttribute('navigation') !== 'none') {
         	 root.append(this.navigation);
         }
-        
+             
         const historyNavigation = document.createElement('div');
         historyNavigation.className = 'history';
         this.navigation.append(historyNavigation);
@@ -93,9 +106,48 @@ window.customElements.define('github-readme', class extends HTMLElement {
           this.history.replace(this.history.entries[this.history.index]); // Reloads the current page
         }
         historyNavigation.append(reloadButton);
+        
+        if (this.getAttribute('navigation') === 'full') {
+          const bookmarks = document.createElement('div');
+          bookmarks.className = 'bookmarks';
+          this.navigation.append(bookmarks);
+        	
+        	this.getAttribute('bookmarks')
+          	.split(';')
+            .reduce((res, v) => v ? [...res, v] : res, [])
+            .map(md => {
+            	// [License](/LICENSE);[Demo](/index.html)
+            	const match = /^\[(?<title>.*?)\]\((?<path>.*?)\)$/igm.exec(md);
+              return [match.groups.title, match.groups.path];
+            })
+            .forEach(([title, path]) => {
+            	const bookmark = document.createElement('button');
+              bookmark.innerText = title;
+              bookmark.onclick = () => {
+              	if (this.history.entries[this.history.index].pathname === path) {
+                	// Don't need to navigate to the page you're already on
+                	return;
+                }
+              	this.history.push(path);
+              }
+              const intervalID = setInterval(() => {
+                  if (this.history !== undefined) {
+                  	const run = () => {
+                      bookmark.disabled = this.history.entries[this.history.index].pathname === path;
+                    }
+                    	
+                    this.history.listen(run);
+                    run();
+                    clearInterval(intervalID);
+                  }
+              }, 33);
+              bookmarks.append(bookmark);
+            });
+        }
 
         this.renderer = document.createElement('renderer');
         this.renderer.classList.add('markdown-body');
+        this.renderer.innerHTML = `<style>.lds-spinner{color:official;display:inline-block;position:relative;width:64px;height:64px;}.lds-spinnerdiv{transform-origin:32px32px;animation:lds-spinner1.2slinearinfinite;}.lds-spinnerdiv:after{content:"";display:block;position:absolute;top:3px;left:29px;width:5px;height:14px;border-radius:20%;background:#fff;}.lds-spinnerdiv:nth-child(1){transform:rotate(0deg);animation-delay:-1.1s;}.lds-spinnerdiv:nth-child(2){transform:rotate(30deg);animation-delay:-1s;}.lds-spinnerdiv:nth-child(3){transform:rotate(60deg);animation-delay:-0.9s;}.lds-spinnerdiv:nth-child(4){transform:rotate(90deg);animation-delay:-0.8s;}.lds-spinnerdiv:nth-child(5){transform:rotate(120deg);animation-delay:-0.7s;}.lds-spinnerdiv:nth-child(6){transform:rotate(150deg);animation-delay:-0.6s;}.lds-spinnerdiv:nth-child(7){transform:rotate(180deg);animation-delay:-0.5s;}.lds-spinnerdiv:nth-child(8){transform:rotate(210deg);animation-delay:-0.4s;}.lds-spinnerdiv:nth-child(9){transform:rotate(240deg);animation-delay:-0.3s;}.lds-spinnerdiv:nth-child(10){transform:rotate(270deg);animation-delay:-0.2s;}.lds-spinnerdiv:nth-child(11){transform:rotate(300deg);animation-delay:-0.1s;}.lds-spinnerdiv:nth-child(12){transform:rotate(330deg);animation-delay:0s;}@keyframeslds-spinner{0%{opacity:1;}100%{opacity:0;}}</style><center><divclass="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></center>`;
         root.append(this.renderer);
         
         shadowRoot.append(markdownScript);
@@ -132,6 +184,7 @@ window.customElements.define('github-readme', class extends HTMLElement {
     }
 
     prepareAttributes() {
+    		// TODO: Add error handling for invalid attribute values
         if (!this.hasAttribute('user')) {
             throw Error('Attribute "user" is required. Please provide a valid github username.');
         }
@@ -143,9 +196,12 @@ window.customElements.define('github-readme', class extends HTMLElement {
         }
         if (!this.hasAttribute('navigation')) {
         	// TODO: Change the default to "full" when bookmarks are implemented
-        	this.setAttribute('navigation', 'history');
+        	this.setAttribute('navigation', 'full');
         }
-
+        if (!this.hasAttribute('bookmarks')) {
+        	// TODO: Change the default to "full" when bookmarks are implemented
+        	this.setAttribute('bookmarks', '');
+        }
     }
 
 		constructUrl(assetURI) {
@@ -159,15 +215,23 @@ window.customElements.define('github-readme', class extends HTMLElement {
     loadPage(assetURI) {
         const assetType = assetURI.substring(assetURI.lastIndexOf('.')+1).toLowerCase();
         const url = this.constructUrl(assetURI);
-        
-        switch(assetType) {
+        fetch(url).then(res => res.json()).then(body => {
+          let strBody = atob(body.content);
+          switch(assetType) {
             case 'md':
-                fetch(url).then(res => res.json()).then(body => {
-                		const strBody = atob(body.content);
-                    this.renderMarkdown(strBody);
-                });
-                break;
-        }
+            case 'html':
+            	// Don't need to change anything
+              break;
+            default: 
+            strBody = `
+\`\`\`
+${strBody}
+\`\`\`
+            `;
+          }
+          this.renderMarkdown(strBody);
+        });
+        
     }
     renderMarkdown(md) {
         this.renderer.innerHTML = this.converter.makeHtml(md);
