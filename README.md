@@ -17,7 +17,7 @@ A custom element that renders the readme of a github repository
     repository="github-readme"
     branch="master"
     index="/README.md"
-    navigation="none | history | full"
+    navigation="full"
     bookmarks="[License](/LICENSE);[Demo](/index.html)"
     style=""
     id=""
