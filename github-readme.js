@@ -138,6 +138,7 @@ window.customElements.define('github-readme', class extends HTMLElement {
             .map(md => {
             	// [License](/LICENSE);[Demo](/index.html)
             	const match = /^\[(?<title>.*?)\]\((?<path>.*?)\)$/igm.exec(md);
+              console.log(match, md);
               return [match.groups.title, match.groups.path];
             })
             .forEach(([title, path]) => {
@@ -240,20 +241,19 @@ window.customElements.define('github-readme', class extends HTMLElement {
         const assetType = assetURI.substring(assetURI.lastIndexOf('.')+1).toLowerCase();
         const url = this.constructUrl(assetURI);
         fetch(url).then(res => res.json()).then(body => {
-          let strBody = atob(body.content);
+          const strBody = atob(body.content);
           switch(assetType) {
             case 'md':
-            case 'html':
-            	// Don't need to change anything
+            	this.renderMarkdown(strBody);
               break;
             default: 
-            strBody = `
+            	this.renderMarkdown(`
 \`\`\`
 ${strBody}
 \`\`\`
-            `;
+            `);
           }
-          this.renderMarkdown(strBody);
+          
         });
         
     }
