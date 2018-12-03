@@ -138,7 +138,6 @@ window.customElements.define('github-readme', class extends HTMLElement {
             .map(md => {
             	// [License](/LICENSE);[Demo](/index.html)
             	const match = /^\[(?<title>.*?)\]\((?<path>.*?)\)$/igm.exec(md);
-              console.log(match, md);
               return [match.groups.title, match.groups.path];
             })
             .forEach(([title, path]) => {
