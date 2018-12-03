@@ -48,3 +48,6 @@ Note to self:
 
 TODO:
 * Syntax highlighting for codeblocks
+
+
+WIP: https://jsfiddle.net/pw2dz9ax/324/
