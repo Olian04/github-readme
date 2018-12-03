@@ -196,6 +196,7 @@ window.customElements.define('github-readme', class extends HTMLElement {
             this.converter.setOption('tables', true);
             this.converter.setOption('ghCodeBlocks', true);
             this.converter.setOption('emoji', true);
+            this.converter.setOption('simplifiedAutoLink', true);
             this.history = window.History.createMemoryHistory();
             this.history.listen((location, action) => {
               // location is an object like window.location
