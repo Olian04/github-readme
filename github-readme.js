@@ -199,7 +199,7 @@ window.customElements.define('github-readme', class extends HTMLElement {
               forwardButton.disabled = !this.history.canGo(1);
               this.loadPage(location.pathname);
             });
-        		this.history.replace('README.md');
+        		this.history.replace(this.getAttribute('index'));
         }
     }
 
@@ -215,12 +215,13 @@ window.customElements.define('github-readme', class extends HTMLElement {
             this.setAttribute('branch', 'master');
         }
         if (!this.hasAttribute('navigation')) {
-        	// TODO: Change the default to "full" when bookmarks are implemented
         	this.setAttribute('navigation', 'full');
         }
         if (!this.hasAttribute('bookmarks')) {
-        	// TODO: Change the default to "full" when bookmarks are implemented
         	this.setAttribute('bookmarks', '');
+        }
+        if (!this.hasAttribute('index')) {
+        	this.setAttribute('index', 'README.md');
         }
     }
 
