@@ -25,15 +25,6 @@ A custom element that renders the readme of a github repository
     />
 ```
 
-Note to self:
-* Cache is always JIT
-* Theme is always github
-* No breadcrumbs navigation 
-* History is on when navigation bar is shows
-* Links is always internal
-* Persist is always false
-
-
 property | default | description
 -----------|----------|--------------
 user |  | The name of the github user that owns the repository
@@ -45,3 +36,13 @@ bookmarks | | Optional bookmarks provided in the form of a simecolon separated s
 style |  | Optional styles passed down to the top most element of the component.
 id |  | Optional id passed down to the top most element of the component.
 class |  | Optional class passed down to the top most element of the component.
+
+
+Note to self:
+* Cache is always JIT
+* Theme is always github
+* No breadcrumbs navigation 
+* History is on when navigation bar is shows
+* Links is always internal
+* Persist is always false
+
