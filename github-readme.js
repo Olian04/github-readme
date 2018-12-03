@@ -33,7 +33,8 @@ window.customElements.define('github-readme', class extends HTMLElement {
                     this.converter = new showdown.Converter();
                     shouldRun = true;
                 }
-            } catch {}
+            } catch (e) {}
+            
             if (shouldRun) {
                 // Needs to be outside of the try catch, since its used to discard errors.
                 run();
@@ -57,9 +58,17 @@ window.customElements.define('github-readme', class extends HTMLElement {
 
     }
 
+		constructUrl(assetURI) {
+    	/*const url = `https://api.github.com/repos/${this.getAttribute('user')}/${this.getAttribute('repository')}/contents/${assetURI}?ref=${this.getAttribute('branch')}`*/
+    	const url = `https://raw.githubusercontent.com/${
+        		['user','repository','branch'].map(s => this.getAttribute(s)).join('/')
+          }/${assetURI}`;
+      return url;
+    }
     fetchAsset(assetURI) {
         const assetType = assetURI.substring(assetURI.lastIndexOf('.')+1).toLowerCase();
-        const url = `https://raw.githubusercontent.com/${['user','repository','branch'].map(s => this.getAttribute(s)).join('/')}/${assetURI}`
+        const url = this.constructUrl(assetURI);
+        
         switch(assetType) {
             case 'md':
                 fetch(url).then(res => res.text()).then(body =>
@@ -70,5 +79,13 @@ window.customElements.define('github-readme', class extends HTMLElement {
     }
     renderMarkdown(md) {
         this.renderer.innerHTML = this.converter.makeHtml(md);
+        this.renderer.querySelectorAll("img,a").forEach(el => {
+          if (el.getAttribute('src') && !el.getAttribute('src').startsWith('http')) {
+            el.setAttribute('src', this.constructUrl(el.getAttribute('src')));
+          }
+          if (el.getAttribute('href') && !el.getAttribute('href').startsWith('http')) {
+            el.setAttribute('href', this.constructUrl(el.getAttribute('href')));
+          }
+        });
     }
 });
