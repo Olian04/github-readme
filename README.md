@@ -9,7 +9,8 @@ A custom element that renders the readme of a github repository
     />
 ```
 
-[Click here to see this page rendered using `github-readme`](https://olian04.github.io/github-readme) :smile:
+[Click here to see this page rendered using `github-readme`](https://olian04.github.io/github-readme) :smile: @olian04
+
 ## Advanced
 
 ```html
