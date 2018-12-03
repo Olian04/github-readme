@@ -27,8 +27,6 @@ A custom element that renders the readme of a github repository
     />
 ```
 
-_**Note:** github-readme uses the github api and is there for limited by [its rate limiting rules](https://developer.github.com/v3/#rate-limiting)._
-
 |property | default | description|
 |:-----------:|:----------:|:--------------|
 |user |  | The name of the github user that owns the repository|
@@ -41,14 +39,17 @@ _**Note:** github-readme uses the github api and is there for limited by [its ra
 |id |  | Optional id passed down to the top most element of the component.|
 |class |  | Optional class passed down to the top most element of the component.|
 
+_**Note:** github-readme uses unauthenticated requests to the github api and is there for limited by [its rate limiting rules](https://developer.github.com/v3/#rate-limiting)._
+> For unauthenticated requests, the rate limit allows for up to 60 requests per hour. Unauthenticated requests are associated with the originating IP address, and not the user making requests.
+
 ## License
 
 See [Licence](/LICENSE)
 
 ## TODO:
 * Mobile support
+* Add cache for offline browsing (this will eliminate the problems with rate limits on the github api)
 * Syntax highlighting for codeblocks
-* Add cache for offline browsing
 
 
 WIP: https://jsfiddle.net/pw2dz9ax/619/
