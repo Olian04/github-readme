@@ -44,4 +44,4 @@ A custom element that renders the readme of a github repository
 * Add cache for offline browsing
 
 
-WIP: https://jsfiddle.net/pw2dz9ax/607/
+WIP: https://jsfiddle.net/pw2dz9ax/613/
