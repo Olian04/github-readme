@@ -39,6 +39,10 @@ A custom element that renders the readme of a github repository
 |id |  | Optional id passed down to the top most element of the component.|
 |class |  | Optional class passed down to the top most element of the component.|
 
+## License
+
+See [Licence](/LICENSE)
+
 ## TODO:
 * Syntax highlighting for codeblocks
 * Add cache for offline browsing
