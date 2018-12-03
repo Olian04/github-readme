@@ -112,8 +112,8 @@ window.customElements.define('github-readme', class extends HTMLElement {
           bookmarks.className = 'bookmarks';
           this.navigation.append(bookmarks);
         	
-        	this.getAttribute('bookmarks')
-          	.split(';')
+          this.getAttribute('bookmarks')
+            .split(';')
             .reduce((res, v) => v ? [...res, v] : res, [])
             .map(md => {
             	// [License](/LICENSE);[Demo](/index.html)
@@ -121,12 +121,12 @@ window.customElements.define('github-readme', class extends HTMLElement {
               return [match.groups.title, match.groups.path];
             })
             .forEach(([title, path]) => {
-            	const bookmark = document.createElement('button');
+              const bookmark = document.createElement('button');
               bookmark.innerText = title;
               bookmark.onclick = () => {
               	if (this.history.entries[this.history.index].pathname === path) {
-                	// Don't need to navigate to the page you're already on
-                	return;
+                  // Don't need to navigate to the page you're already on
+                  return;
                 }
               	this.history.push(path);
               }
