@@ -17,6 +17,30 @@ A custom element that renders the readme of a github repository
     repository="github-readme"
     branch="master"
     index="/README.md"
+    hideNavigation="false"
+    bookmarks=""
+    style=""
+    id=""
+    class=""
+    />
+```
+
+Note to self:
+* Cache is always JIT
+* Theme is always github
+* No breadcrumbs navigation 
+* History is on when navigation bar is shows
+* Links is always internal
+* Persist is always false
+
+## Old deprecated design
+
+```html
+<github-readme
+    user="olian04"
+    repository="github-readme"
+    branch="master"
+    index="/README.md"
     cache="jit"
     persist="false"
     links="internal"
