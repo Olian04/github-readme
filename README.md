@@ -27,6 +27,8 @@ A custom element that renders the readme of a github repository
     />
 ```
 
+_**Note:** github-readme uses the github api and is there for limited by [its rate limiting rules](https://developer.github.com/v3/#rate-limiting)._
+
 |property | default | description|
 |:-----------:|:----------:|:--------------|
 |user |  | The name of the github user that owns the repository|
