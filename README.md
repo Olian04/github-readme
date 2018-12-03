@@ -46,3 +46,5 @@ Note to self:
 * Links is always internal
 * Persist is always false
 
+TODO:
+* Syntax highlighting for codeblocks
