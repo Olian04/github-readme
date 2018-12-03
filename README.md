@@ -37,17 +37,9 @@ style |  | Optional styles passed down to the top most element of the component.
 id |  | Optional id passed down to the top most element of the component.
 class |  | Optional class passed down to the top most element of the component.
 
-
-Note to self:
-* Cache is always JIT
-* Theme is always github
-* No breadcrumbs navigation 
-* History is on when navigation bar is shows
-* Links is always internal
-* Persist is always false
-
 TODO:
 * Syntax highlighting for codeblocks
+* Add cache for offline browsing
 
 
-WIP: https://jsfiddle.net/pw2dz9ax/324/
+WIP: https://jsfiddle.net/pw2dz9ax/571/
