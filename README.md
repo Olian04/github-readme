@@ -44,6 +44,7 @@ A custom element that renders the readme of a github repository
 See [Licence](/LICENSE)
 
 ## TODO:
+* Mobile support
 * Syntax highlighting for codeblocks
 * Add cache for offline browsing
 
