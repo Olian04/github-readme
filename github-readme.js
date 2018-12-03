@@ -10,17 +10,96 @@ window.customElements.define('github-readme', class extends HTMLElement {
         const markdownScript = document.createElement('script');
         markdownScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js';
         markdownScript.async = false;
+        const historyScript = document.createElement('script');
+        historyScript.src = 'https://unpkg.com/history/umd/history.min.js';
+        historyScript.async = false;
         const root = document.createElement('div');
         const githubStyles = document.createElement('link');
         githubStyles.rel = 'stylesheet';
         githubStyles.href = 'https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.10.0/github-markdown.min.css';
         const style = document.createElement('style');
+        style.type = 'text/css';
+        const color = {
+        	light: '#dfe2e5',
+          dark: '#4F4F4F'
+        }
+        style.appendChild(document.createTextNode(`
+        	nav {
+          	position: relative;
+            height: 25px;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            border-bottom: 1px ${color.light} solid;
+            padding-bottom: 2px;
+            margin-bottom: 8px;
+          }
+         nav .history {
+           position: relative;
+           height: 100%;
+           width: 100px;
+         }
+         nav .history button {
+         	 position: relative;
+           height: 25px;
+           width: 25px;
+           border-radius: 50%;
+           margin-left: 2px;
+         	 background: ${color.dark};
+           border: 1px white solid;
+           color: white;
+         }
+         nav .history button:hover {
+           border: 1px ${color.dark} solid;
+           color: ${color.dark};
+           background: transparent;
+         }
+         nav .history button:disabled {
+         	background: ${color.light};
+         }
+         nav .history button:disabled:hover {
+           border: 1px white solid;
+           color: white;
+           background: ${color.light};
+         }
+        `));
+        // TODO: Add bookmarks
+        // TODO: Add back, forward, reload buttons
+        this.navigation = document.createElement('nav');
+        if (this.getAttribute('navigation') !== 'none') {
+        	 root.append(this.navigation);
+        }
+        
+        const historyNavigation = document.createElement('div');
+        historyNavigation.className = 'history';
+        this.navigation.append(historyNavigation);
+
+        const backButton = document.createElement('button');
+        backButton.innerText = '<';
+        backButton.onclick = () => {
+          this.history.goBack();
+        }
+        historyNavigation.append(backButton);
+        const forwardButton = document.createElement('button');
+        forwardButton.innerText = '>';
+        forwardButton.onclick = () => {
+          this.history.goForward();
+        }
+        historyNavigation.append(forwardButton);
+        const reloadButton = document.createElement('button');
+        reloadButton.innerText = '↻';
+        reloadButton.onclick = () => {
+          this.history.replace(this.history.entries[this.history.index]); // Reloads the current page
+        }
+        historyNavigation.append(reloadButton);
 
         this.renderer = document.createElement('renderer');
         this.renderer.classList.add('markdown-body');
         root.append(this.renderer);
         
         shadowRoot.append(markdownScript);
+        shadowRoot.append(historyScript);
         shadowRoot.append(githubStyles);
         shadowRoot.append(style);
         shadowRoot.append(root);
@@ -28,9 +107,8 @@ window.customElements.define('github-readme', class extends HTMLElement {
         const intervalID = setInterval(() => {
             let shouldRun = false;
             try {
-                if (showdown) {
+                if (showdown !== undefined && window.History.createMemoryHistory !== undefined) {
                     clearInterval(intervalID);
-                    this.converter = new showdown.Converter();
                     shouldRun = true;
                 }
             } catch (e) {}
@@ -40,8 +118,16 @@ window.customElements.define('github-readme', class extends HTMLElement {
                 run();
             }
         }, 33);
-        const run = () => {
-            this.fetchAsset('README.md');
+        const run = () => { 
+            this.converter = new showdown.Converter();
+            this.history = window.History.createMemoryHistory();
+            this.history.listen((location, action) => {
+              // location is an object like window.location
+              backButton.disabled = !this.history.canGo(-1);
+              forwardButton.disabled = !this.history.canGo(1);
+              this.loadPage(location.pathname);
+            });
+        		this.history.replace('README.md');
         }
     }
 
@@ -55,6 +141,10 @@ window.customElements.define('github-readme', class extends HTMLElement {
         if (!this.hasAttribute('branch')) {
             this.setAttribute('branch', 'master');
         }
+        if (!this.hasAttribute('navigation')) {
+        	// TODO: Change the default to "full" when bookmarks are implemented
+        	this.setAttribute('navigation', 'history');
+        }
 
     }
 
@@ -66,7 +156,7 @@ window.customElements.define('github-readme', class extends HTMLElement {
         this.getAttribute('branch')}`;
       return url;
     }
-    fetchAsset(assetURI) {
+    loadPage(assetURI) {
         const assetType = assetURI.substring(assetURI.lastIndexOf('.')+1).toLowerCase();
         const url = this.constructUrl(assetURI);
         
@@ -100,7 +190,7 @@ window.customElements.define('github-readme', class extends HTMLElement {
             	// Relative path
               el.onclick = (ev) => {
                 ev.preventDefault();
-                this.fetchAsset(el.getAttribute('href'));
+                this.history.push(el.getAttribute('href'));
               }
             }
           }
