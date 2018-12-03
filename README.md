@@ -28,7 +28,7 @@ A custom element that renders the readme of a github repository
 ```
 
 |property | default | description|
-|:-----------:|:----------:|:--------------:|
+|:-----------:|:----------:|:--------------|
 |user |  | The name of the github user that owns the repository|
 |repository |  | The name of the github repository you want to display|
 |branch | master | The name of the git branch you want to display|
