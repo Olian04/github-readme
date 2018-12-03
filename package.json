@@ -2,7 +2,7 @@
   "name": "@olian/github-readme",
   "version": "1.0.0",
   "description": "A custom element that renders the readme of a github repository",
-  "main": "index.js",
+  "main": "github-readme.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
