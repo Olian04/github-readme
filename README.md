@@ -6,7 +6,7 @@ A custom element that renders the readme of a github repository
 <github-readme
     user="olian04"
     repository="github-readme"
-    />
+    ></github-readme>
 ```
 
 [Click here to see this page rendered using `github-readme`](https://olian04.github.io/github-readme) :smile:
@@ -28,7 +28,7 @@ A custom element that renders the readme of a github repository
     style=""
     id=""
     class=""
-    />
+    ></github-readme>
 ```
 
 |property | default | description|
