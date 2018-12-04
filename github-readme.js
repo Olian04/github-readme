@@ -32,10 +32,11 @@ window.customElements.define('github-readme', class extends HTMLElement {
         	light: '#dfe2e5',
           dark: '#4F4F4F'
         }
+        const navHeight = this.getAttribute('navigation') !== 'none' ? '25px' : '0px'
         style.appendChild(document.createTextNode(`
          :host {
              display: block;
-             height: calc(100vh - 25px);
+             height: calc(100vh - ${navHeight});
              width: 100%;
              padding: 0px;
              margin: 0px;
@@ -49,7 +50,7 @@ window.customElements.define('github-readme', class extends HTMLElement {
          .markdown-body {
            	 position: absolute;
              overflow-y: auto;
-             height: calc(100% - 25px);
+             height: calc(100% - ${navHeight});
              width: 100%;
          }
          button {
@@ -72,7 +73,7 @@ window.customElements.define('github-readme', class extends HTMLElement {
          }
          nav {
           	position: relative;
-            height: 25px;
+            height: ${navHeight};
             width: 100%;
             display: flex;
             flex-direction: row;
@@ -87,8 +88,8 @@ window.customElements.define('github-readme', class extends HTMLElement {
          }
          nav .history button {
            position: relative;
-           height: 25px;
-           width: 25px;
+           height: ${navHeight};
+           width: ${navHeight};
            border-radius: 50%;
            margin-left: 2px;
          }
@@ -100,7 +101,7 @@ window.customElements.define('github-readme', class extends HTMLElement {
          }
          nav .bookmarks button {
            position: relative;
-           height: 25px;
+           height: ${navHeight};
            border-radius: 20px;
            margin-left: 2px;
          }
