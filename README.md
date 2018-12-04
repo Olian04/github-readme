@@ -55,3 +55,4 @@ See [Licence](/LICENSE)
 ## TODO:
 * Mobile support
 * Add cache for offline browsing (this will eliminate the problems with rate limits on the github api)
+* Add more languages to highlight.js (typescript for example)
