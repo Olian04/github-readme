@@ -7,17 +7,25 @@ window.customElements.define('github-readme', class extends HTMLElement {
         this.prepareAttributes();
 
         const shadowRoot = this.attachShadow({mode: 'open'});
+        const root = document.createElement('div');
+        root.className = 'root';
+
         const markdownScript = document.createElement('script');
         markdownScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js';
         markdownScript.async = false;
         const historyScript = document.createElement('script');
         historyScript.src = 'https://unpkg.com/history/umd/history.min.js';
         historyScript.async = false;
-        const root = document.createElement('div');
-        root.className = 'root';
+        const highlightScript = document.createElement('script');
+        highlightScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js';
+        highlightScript.async = false;
+
         const githubStyles = document.createElement('link');
         githubStyles.rel = 'stylesheet';
         githubStyles.href = 'https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.10.0/github-markdown.min.css';
+        const highlightStyles = document.createElement('link');
+        highlightStyles.rel = 'stylesheet';
+        highlightStyles.href = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css';
         const style = document.createElement('style');
         style.type = 'text/css';
         const color = {
@@ -25,44 +33,44 @@ window.customElements.define('github-readme', class extends HTMLElement {
           dark: '#4F4F4F'
         }
         style.appendChild(document.createTextNode(`
-           :host {
+         :host {
              display: block;
              height: calc(100vh - 25px);
              width: 100%;
              padding: 0px;
              margin: 0px;
-           }
-        	 .root {
+         }
+         .root {
            	 position: relative;
              height: 100%;
              padding: 0px;
              margin: 0px;
-           }
-           .markdown-body {
+         }
+         .markdown-body {
            	 position: absolute;
              overflow-y: auto;
              height: calc(100% - 25px);
              width: 100%;
-           }
-           button {
+         }
+         button {
              background: ${color.dark};
              border: 1px white solid;
              color: white;
-           }
-           button:hover {
+         }
+         button:hover {
              border: 1px ${color.dark} solid;
              color: ${color.dark};
              background: transparent;
-           }
-           button:disabled {
+         }
+         button:disabled {
             background: ${color.light};
-           }
-           button:disabled :hover {
+         }
+         button:disabled :hover {
              border: 1px white solid;
              color: white;
              background: ${color.light};
-           }
-        	nav {
+         }
+         nav {
           	position: relative;
             height: 25px;
             width: 100%;
@@ -72,26 +80,26 @@ window.customElements.define('github-readme', class extends HTMLElement {
             border-bottom: 1px ${color.light} solid;
             padding-bottom: 2px;
             margin-bottom: 8px;
-          }
+         }
          nav .history {
            position: relative;
            height: 100%;
          }
          nav .history button {
-         	 position: relative;
+           position: relative;
            height: 25px;
            width: 25px;
            border-radius: 50%;
            margin-left: 2px;
          }
          nav .bookmarks {
-         	 position: relative;
+           position: relative;
            margin-left: 5px;
            padding-left: 5px;
            border-left: 1px ${color.light} solid;
          }
          nav .bookmarks button {
-         	 position: relative;
+           position: relative;
            height: 25px;
            border-radius: 20px;
            margin-left: 2px;
@@ -170,14 +178,16 @@ window.customElements.define('github-readme', class extends HTMLElement {
         
         shadowRoot.append(markdownScript);
         shadowRoot.append(historyScript);
+        shadowRoot.append(highlightScript);
         shadowRoot.append(githubStyles);
+        shadowRoot.append(highlightStyles);
         shadowRoot.append(style);
         shadowRoot.append(root);
 
         const intervalID = setInterval(() => {
             let shouldRun = false;
             try {
-                if (showdown !== undefined && window.History.createMemoryHistory !== undefined) {
+                if (showdown !== undefined && window.History.createMemoryHistory !== undefined && hljs.initHighlightingOnLoad !== undefined) {
                     clearInterval(intervalID);
                     shouldRun = true;
                 }
@@ -201,7 +211,7 @@ window.customElements.define('github-readme', class extends HTMLElement {
               forwardButton.disabled = !this.history.canGo(1);
               this.loadPage(location.pathname);
             });
-        		this.history.replace(this.getAttribute('index'));
+        	this.history.replace(this.getAttribute('index'));
         }
     }
 
@@ -251,13 +261,16 @@ ${strBody}
 \`\`\`
             `);
           }
-          
         });
         
     }
     renderMarkdown(md) {
         this.renderer.innerHTML = this.converter.makeHtml(md);
-        this.renderer.querySelectorAll("img,a").forEach(el => {
+        hljs.initHighlightingOnLoad();
+        this.renderer.querySelectorAll('pre code').forEach(el => {
+            hljs.highlightBlock(el);
+        });
+        this.renderer.querySelectorAll('img,a').forEach(el => {
           if (el.getAttribute('src') && !el.getAttribute('src').startsWith('http')) {
           	fetch(this.constructUrl(el.getAttribute('src')))
             	.then(res => res.json())
