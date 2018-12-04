@@ -97,8 +97,6 @@ window.customElements.define('github-readme', class extends HTMLElement {
            margin-left: 2px;
          }
         `));
-        // TODO: Add bookmarks
-        // TODO: Add back, forward, reload buttons
         this.navigation = document.createElement('nav');
         if (this.getAttribute('navigation') !== 'none') {
         	 root.append(this.navigation);
