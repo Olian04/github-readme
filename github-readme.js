@@ -52,6 +52,7 @@ window.customElements.define('github-readme', class extends HTMLElement {
              overflow-y: auto;
              height: calc(100% - ${navHeight});
              width: 100%;
+             padding-top: 8px;
          }
          button {
              background: ${color.dark};
@@ -80,7 +81,7 @@ window.customElements.define('github-readme', class extends HTMLElement {
             align-items: center;
             border-bottom: 1px ${color.light} solid;
             padding-bottom: 2px;
-            margin-bottom: 8px;
+            padding-top: 5px;
          }
          nav .history {
            position: relative;
