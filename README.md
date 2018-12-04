@@ -54,6 +54,3 @@ See [Licence](/LICENSE)
 * Mobile support
 * Add cache for offline browsing (this will eliminate the problems with rate limits on the github api)
 * Syntax highlighting for codeblocks
-
-
-WIP: https://jsfiddle.net/pw2dz9ax/619/
