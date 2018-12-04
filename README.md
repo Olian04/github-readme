@@ -11,7 +11,7 @@ A custom element that renders the readme of a github repository
 
 [Click here to see this page rendered using `github-readme`](https://olian04.github.io/github-readme) :smile:
 
-Or [click here to see a multi page demo](https://olian04.github.io/github-readme/multipage_demo.html)
+Or [click here to see a multi page demo in a jsfiddle](https://jsfiddle.net/cLyum7jr/33/)
 
 ## Install
 
