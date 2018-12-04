@@ -11,6 +11,10 @@ A custom element that renders the readme of a github repository
 
 [Click here to see this page rendered using `github-readme`](https://olian04.github.io/github-readme) :smile:
 
+## Install
+
+[`npm install @olian/github-readme`](https://www.npmjs.com/package/@olian/github-readme)
+
 ## Advanced
 
 ```html
