@@ -59,6 +59,9 @@ window.customElements.define('github-readme', class extends HTMLElement {
              border: 1px white solid;
              color: white;
          }
+         button:focus {
+         	  outline: none;
+         }
          button:hover {
              border: 1px ${color.dark} solid;
              color: ${color.dark};
