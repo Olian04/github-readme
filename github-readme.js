@@ -2,9 +2,12 @@ window.customElements.define('github-readme', class extends HTMLElement {
     constructor() {
         super();
     }
-
     connectedCallback() {
         this.prepareAttributes();
+        this.cache = {
+        	get: key => localStorage.getItem(key),
+        	set: (key, value) => localStorage.setItem(key, value)
+        }
 
         const shadowRoot = this.attachShadow({mode: 'open'});
         const root = document.createElement('div');
@@ -219,7 +222,6 @@ window.customElements.define('github-readme', class extends HTMLElement {
         	this.history.replace(this.getAttribute('index'));
         }
     }
-
     prepareAttributes() {
     		// TODO: Add error handling for invalid attribute values
         if (!this.hasAttribute('user')) {
@@ -241,7 +243,6 @@ window.customElements.define('github-readme', class extends HTMLElement {
         	this.setAttribute('index', 'README.md');
         }
     }
-
 		constructUrl(assetURI) {
     	const url = `https://api.github.com/repos/${
       	this.getAttribute('user')}/${
@@ -251,23 +252,31 @@ window.customElements.define('github-readme', class extends HTMLElement {
       return url;
     }
     loadPage(assetURI) {
-        const assetType = assetURI.lastIndexOf('.') > 0 ? assetURI.substring(assetURI.lastIndexOf('.')+1).toLowerCase() : '';
+        const assetType = assetURI.lastIndexOf('.') > 0 ? assetURI.substring(assetURI.lastIndexOf('.')+1).toLowerCase() : 'plaintext';
         const url = this.constructUrl(assetURI);
-        fetch(url).then(res => res.json()).then(body => {
-          const strBody = atob(body.content);
+        const run = (strBody) => {
           switch(assetType) {
-            case 'md':
-            	this.renderMarkdown(strBody);
-              break;
-            default: 
-            	this.renderMarkdown(`
-\`\`\`${assetType}
-${strBody}
-\`\`\`
-            `);
-          }
-        });
-        
+              case 'md':
+                this.renderMarkdown(strBody);
+                break;
+              default: 
+                this.renderMarkdown(`
+  \`\`\`${assetType}
+  ${strBody}
+  \`\`\`
+              `);
+            }
+        }
+        const cachedStrBody = this.cache.get(assetURI);
+        if (cachedStrBody) {
+        	run(cachedStrBody);
+        } else {
+        	fetch(url).then(res => res.json()).then(body => {
+            const strBody = atob(body.content);
+            run(strBody);
+            this.cache.set(assetURI, strBody);
+          });
+        }
     }
     renderMarkdown(md) {
         this.renderer.innerHTML = this.converter.makeHtml(md);
@@ -277,11 +286,18 @@ ${strBody}
         });
         this.renderer.querySelectorAll('img,a').forEach(el => {
           if (el.getAttribute('src') && !el.getAttribute('src').startsWith('http')) {
-          	fetch(this.constructUrl(el.getAttribute('src')))
-            	.then(res => res.json())
-              .then(body => {
-            	el.setAttribute('src', `data:img/png;base64,${body.content}`);
-            });
+          	const cachedSrc = this.cache.get(el.getAttribute('src'));
+            if (cachedSrc) {
+            	el.setAttribute('src', cachedSrc);
+            } else {
+            	fetch(this.constructUrl(el.getAttribute('src')))
+                .then(res => res.json())
+                .then(body => {
+                	const src = `data:img/png;base64,${body.content}`; 
+            			this.cache.set(el.getAttribute('src'), src);
+                	el.setAttribute('src', src);
+              	});
+            }
           }
           if (el.getAttribute('href')) {
           	if (el.getAttribute('href').startsWith('http')) {
