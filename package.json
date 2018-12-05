@@ -1,6 +1,6 @@
 {
   "name": "@olian/github-readme",
-  "version": "1.0.5",
+  "version": "1.1.2",
   "description": "A custom element that renders the readme of a github repository",
   "main": "github-readme.js",
   "scripts": {
