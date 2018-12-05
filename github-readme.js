@@ -145,8 +145,8 @@ window.customElements.define('github-readme', class extends HTMLElement {
             .reduce((res, v) => v ? [...res, v] : res, [])
             .map(md => {
             	// [License](/LICENSE);[Demo](/index.html)
-            	const match = /^\[(?<title>.*?)\]\((?<path>.*?)\)$/igm.exec(md);
-              return [match.groups.title, match.groups.path];
+            	const match = /^\[(.*?)\]\((.*?)\)$/igm.exec(md);
+              return [match[1], match[2]];
             })
             .forEach(([title, path]) => {
             	const bookmark = document.createElement('button');
