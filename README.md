@@ -52,7 +52,3 @@ _**Note:** github-readme uses unauthenticated requests to the github api and is 
 
 See [Licence](/LICENSE)
 
-## TODO:
-* Mobile support
-* Add cache for offline browsing (this will eliminate the problems with rate limits on the github api)
-* Syntax highlighting for codeblocks
