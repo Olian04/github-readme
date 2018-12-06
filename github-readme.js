@@ -251,7 +251,7 @@ window.customElements.define('github-readme', class extends HTMLElement {
       return url;
     }
     loadPage(assetURI) {
-        const assetType = assetURI.lastIndexOf('.') > 0 ? assetURI.substring(assetURI.lastIndexOf('.')+1).toLowerCase() : '';
+        const assetType = assetURI.lastIndexOf('.') > 0 ? assetURI.substring(assetURI.lastIndexOf('.')+1).toLowerCase() : 'plaintext';
         const url = this.constructUrl(assetURI);
         fetch(url).then(res => res.json()).then(body => {
           const strBody = atob(body.content);
