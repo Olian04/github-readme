@@ -14,7 +14,7 @@ window.customElements.define('github-readme', class extends HTMLElement {
         markdownScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js';
         markdownScript.async = false;
         const historyScript = document.createElement('script');
-        historyScript.src = 'https://unpkg.com/history@4.7.2/umd/history.min.js';
+        historyScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/history/4.7.2/history.min.js';
         historyScript.async = false;
         const highlightScript = document.createElement('script');
         highlightScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js';
