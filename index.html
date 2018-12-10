@@ -11,18 +11,133 @@
     
     <script src="./github-readme.js"></script>
     <style>
-        body {
-            margin: 0px;
-            padding: 0px;
+        input {
+            border-radius: 25px;
             padding-left: 5px;
+            border: 1px #4F4F4F solid;
+        }
+        input[id="user"] {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        input[id="repository"] {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+        input[type="submit"] {
+            background: #4F4F4F;
+            color: white;
+        }
+        input[type="submit"]:hover {
+            border: 1px #4F4F4F solid;
+            color: #4F4F4F;
+            background: transparent;
+        }
+        input:focus {
+        	outline: none;
+        }
+         button {
+             background: #4F4F4F;
+             border: 1px white solid;
+             color: white;
+         }
+         button:disabled {
+            background: #dfe2e5;
+         }
+         button:disabled :hover {
+             border: 1px white solid;
+             color: white;
+             background: #dfe2e5;
+         }
+        body {
+            position: relative;
+            height: 100vh;
+            width: 100vw;
+            padding: 0px;
+            margin: 0px;
+            display: grid;
+            grid-template-columns: 1fr 5fr 1fr;
+            grid-template-rows: 1fr 9fr;
+            grid-template-areas: 
+                ". header ."
+                ". content .";
+        }
+        header {
+            position: relative;
+            grid-area: header;
+        }
+        header form {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+            grid-template-areas: 
+                "user repository"
+                "bookmarks bookmarks"
+                "submit submit";
+        }
+        header #user {
+            position: relative;
+            grid-area: user;
+        }
+        header #repository {
+            position: relative;
+            grid-area: repository;
+        }
+        header #bookmarks {
+            position: relative;
+            grid-area: bookmarks;
+        }
+        header #submit {
+            position: relative;
+            grid-area: submit;
+        }
+        content {
+            position: relative;
+            grid-area: content;
+            padding-left: 5px;
+            border: 1px #dfe2e5 solid;
+        }
+        github-readme {
+            position: relative;
+            height: 100%;
         }
     </style>
 </head>
 <body>
-    <github-readme 
-          user="Olian04" 
-          repository="github-readme"
-          bookmarks="[Home](/README.md);[License](/LICENSE);[Demo](/index.html)"
-          ></github-readme>
+    <script>
+        const args = location.search.split('&').reduce((res, str) => {
+            const [key, value] = str.split('=');
+            res[key] = decodeURI(value);
+            return res;
+        }, {});
+    </script>
+    <header>
+        <script>
+            document.write(`
+            <form>
+                <input id="user" type="text" name="user" ${args.user ? `value="${args.user}"` : `placeholder="Olian04"`}>
+                <input id="repository" type="text" name="repository" ${args.repository ? `value="${args.repository}"` : `placeholder="github-readme"`}>
+                <br>
+                <input id="bookmarks" type="text" name="bookmarks" ${args.bookmarks ? `value="${args.bookmarks}"` : `placeholder="[Home](/README.md);[License](/LICENSE);[Demo](/index.html)"`}>
+                <br>
+                <input id="submit" type="submit" value="Load readme">
+            </form>
+            `);
+        </script>
+    </header>
+    <content>
+        <script>
+            document.write(`
+            <github-readme 
+                user="${args.user || 'Olian04'}" 
+                repository="${args.repository || 'github-readme'}"
+                bookmarks="${args.bookmarks || '[Home](/README.md);[License](/LICENSE);[Demo](/index.html)'}"
+                ></github-readme>
+            `);
+        </script>
+    </content>
 </body>
 </html>
