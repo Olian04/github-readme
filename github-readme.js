@@ -35,6 +35,7 @@ window.customElements.define('github-readme', class extends HTMLElement {
         const navHeight = this.getAttribute('navigation') !== 'none' ? '25px' : '0px'
         style.appendChild(document.createTextNode(`
          :host {
+             box-sizing: border-box;
              display: block;
              height: calc(100vh - ${navHeight});
              width: 100%;
@@ -42,17 +43,18 @@ window.customElements.define('github-readme', class extends HTMLElement {
              margin: 0px;
          }
          .root {
+             box-sizing: border-box;
            	 position: relative;
              height: 100%;
              padding: 0px;
              margin: 0px;
          }
          .markdown-body {
+             box-sizing: border-box;
            	 position: absolute;
              overflow-y: auto;
-             height: calc(100% - ${navHeight});
+             height: calc(100% - ${navHeight} - 10px);
              width: 100%;
-             padding-top: 8px;
          }
          button {
              background: ${color.dark};
@@ -76,26 +78,25 @@ window.customElements.define('github-readme', class extends HTMLElement {
              background: ${color.light};
          }
          nav {
+            box-sizing: border-box;
           	position: relative;
-            height: ${navHeight};
+            height: calc(${navHeight} + 10px);
             width: 100%;
             display: flex;
             flex-direction: row;
             align-items: center;
             border-bottom: 1px ${color.light} solid;
-            padding-bottom: 2px;
-            padding-top: 5px;
          }
          nav .history {
            position: relative;
-           height: 100%;
+           height: ${navHeight};
          }
          nav .history button {
            position: relative;
            height: ${navHeight};
            width: ${navHeight};
            border-radius: 50%;
-           margin-left: 2px;
+           margin-left: 2px;  
          }
          nav .bookmarks {
            position: relative;
