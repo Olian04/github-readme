@@ -149,13 +149,13 @@
         <script>
             document.write(`
             <form onsubmit="return updateProps(this);">
-                <input id="user" type="text" ${args.user ? `value="${args.user}"` : `placeholder="Olian04"`}>
-                <input id="repository" type="text" ${args.repository ? `value="${args.repository}"` : `placeholder="github-readme"`}>
+                <input id="user" type="text" ${args.user ? `value="${args.user}"` : `placeholder="username: Olian04"`}>
+                <input id="repository" type="text" ${args.repository ? `value="${args.repository}"` : `placeholder="repository: github-readme"`}>
                 <br>
-                <input id="index" type="text" ${args.index ? `value="${args.index}"` : `placeholder="/README.md"`}>
-                <input id="navigation" type="text" ${args.navigation ? `value="${args.navigation}"` : `placeholder="full"`}>
+                <input id="index" type="text" ${args.index ? `value="${args.index}"` : `placeholder="index page (case sensitive): /README.md"`}>
+                <input id="navigation" type="text" ${args.navigation ? `value="${args.navigation}"` : `placeholder="navigation: full"`}>
                 <br>
-                <input id="bookmarks" type="text" ${args.bookmarks ? `value="${args.bookmarks}"` : `placeholder="[Home](/README.md);[License](/LICENSE);[Demo](/index.html)"`}>
+                <input id="bookmarks" type="text" ${args.bookmarks ? `value="${args.bookmarks}"` : `placeholder="bookmarks (case sensitive): [Home](/README.md);[License](/LICENSE);[Demo](/index.html)"`}>
                 <br>
                 <input id="submit" type="submit" value="Load readme">
             </form>
