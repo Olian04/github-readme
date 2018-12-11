@@ -16,11 +16,11 @@
             padding-left: 5px;
             border: 1px #4F4F4F solid;
         }
-        input[id="user"] {
+        input[id="user"], input[id="index"] {
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
         }
-        input[id="repository"] {
+        input[id="repository"], input[id="navigation"] {
             border-top-left-radius: 0;
             border-bottom-left-radius: 0;
         }
@@ -57,9 +57,8 @@
             margin: 0px;
             display: grid;
             grid-template-columns: 1fr 5fr 1fr;
-            grid-template-rows: 20px 1fr 9fr 20px;
+            grid-template-rows: 150px 9fr 20px;
             grid-template-areas: 
-                ". . ."
                 ". header ."
                 ". content ."
                 ". . .";
@@ -67,12 +66,15 @@
         @media(max-width: 992px) {
             body {
                 grid-template-columns: 20px 1fr 20px;
-                grid-template-rows: 15px 100px 1fr;
+                grid-template-rows: 150px 1fr;
                 grid-template-areas: 
-                ". . ."
                 ". header ."
                 "content content content";
             }
+        }
+        form {
+            position: relative;
+            transform: translateY(15px);
         }
         header {
             position: relative;
@@ -84,15 +86,24 @@
             width: 100%;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr 1fr;
             grid-template-areas: 
                 "user repository"
+                "index navigation"
                 "bookmarks bookmarks"
                 "submit submit";
         }
         header #user {
             position: relative;
             grid-area: user;
+        }
+        header #index {
+            position: relative;
+            grid-area: index;
+        }
+        header #navigation {
+            position: relative;
+            grid-area: navigation;
         }
         header #repository {
             position: relative;
@@ -120,7 +131,7 @@
 </head>
 <body>
     <script>
-        const args = ['user', 'repository', 'bookmarks'].reduce((res, k) => {
+        const args = ['user', 'repository', 'bookmarks', 'index', 'navigation'].reduce((res, k) => {
             res[k] = window.localStorage.getItem(k);
             return res;
         }, {});
@@ -128,6 +139,8 @@
             window.localStorage.setItem('user', el.querySelector('#user').value);
             window.localStorage.setItem('repository', el.querySelector('#repository').value);
             window.localStorage.setItem('bookmarks', el.querySelector('#bookmarks').value);
+            window.localStorage.setItem('index', el.querySelector('#index').value);
+            window.localStorage.setItem('navigation', el.querySelector('#navigation').value);
             window.location.reload();
             return false;
         }
@@ -138,6 +151,9 @@
             <form onsubmit="return updateProps(this);">
                 <input id="user" type="text" ${args.user ? `value="${args.user}"` : `placeholder="Olian04"`}>
                 <input id="repository" type="text" ${args.repository ? `value="${args.repository}"` : `placeholder="github-readme"`}>
+                <br>
+                <input id="index" type="text" ${args.index ? `value="${args.index}"` : `placeholder="/README.md"`}>
+                <input id="navigation" type="text" ${args.navigation ? `value="${args.navigation}"` : `placeholder="full"`}>
                 <br>
                 <input id="bookmarks" type="text" ${args.bookmarks ? `value="${args.bookmarks}"` : `placeholder="[Home](/README.md);[License](/LICENSE);[Demo](/index.html)"`}>
                 <br>
@@ -153,6 +169,8 @@
                 user="${args.user || 'Olian04'}" 
                 repository="${args.repository || 'github-readme'}"
                 bookmarks="${args.bookmarks || '[Home](/README.md);[License](/LICENSE);[Demo](/index.html)'}"
+                index="${args.index || '/README.md'}"
+                navigation="${args.navigation || 'full'}"
                 ></github-readme>
             `);
         </script>
