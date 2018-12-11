@@ -1,5 +1,4 @@
-window.customElements.define(
-    "github-readme",
+window.customElements.define("github-readme", 
     class extends HTMLElement {
         constructor() {
             super();
@@ -15,137 +14,131 @@ window.customElements.define(
             root.className = "root";
 
             const markdownScript = document.createElement("script");
-            markdownScript.src =
-                "https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js";
+            markdownScript.src = "https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js";
             markdownScript.async = false;
             const historyScript = document.createElement("script");
-            historyScript.src =
-                "https://cdnjs.cloudflare.com/ajax/libs/history/4.7.2/history.min.js";
+            historyScript.src = "https://cdnjs.cloudflare.com/ajax/libs/history/4.7.2/history.min.js";
             historyScript.async = false;
             const highlightScript = document.createElement("script");
-            highlightScript.src =
-                "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js";
+            highlightScript.src = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js";
             highlightScript.async = false;
 
             const githubStyles = document.createElement("link");
             githubStyles.rel = "stylesheet";
-            githubStyles.href =
-                "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.10.0/github-markdown.min.css";
+            githubStyles.href = "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.10.0/github-markdown.min.css";
             const highlightStyles = document.createElement("link");
             highlightStyles.rel = "stylesheet";
-            highlightStyles.href =
-                "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css";
+            highlightStyles.href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css";
             const style = document.createElement("style");
             style.type = "text/css";
+            
             const color = {
                 light: "#dfe2e5",
                 dark: "#4F4F4F"
             };
-            const navHeight =
-                this.getAttribute("navigation") !== "none" ? "25px" : "0px";
+            const navHeight = this.getAttribute("navigation") !== "none" ? "25px" : "0px";
             style.appendChild(
                 document.createTextNode(`
-
-         :host {
-             box-sizing: border-box;
-             display: block;
-             height: -webkit-calc(100vh - ${navHeight});
-             height: -moz-calc(100vh - ${navHeight});
-             height: calc(100vh - ${navHeight});
-             width: 100%;
-             padding: 0px;
-             margin: 0px;
-         }
-         .root {
-             box-sizing: border-box;
-           	 position: relative;
-             height: 100%;
-             padding: 0px;
-             margin: 0px;
-         }
-         .markdown-body {
-             box-sizing: border-box;
-           	 position: absolute;
-             overflow-y: auto;
-             height: -webkit-calc(100% - ${navHeight} - 10px);
-             height: -moz-calc(100% - ${navHeight} - 10px);
-             height: calc(100% - ${navHeight} - 10px);
-             width: 100%;
-         }
-         button {
-             background: ${color.dark};
-             border: 1px white solid;
-             color: white;
-         }
-         button:focus {
-         	  outline: none;
-         }
-         button:hover {
-             border: 1px ${color.dark} solid;
-             color: ${color.dark};
-             background: transparent;
-         }
-         button:disabled {
-            background: ${color.light};
-         }
-         button:disabled :hover {
-             border: 1px white solid;
-             color: white;
-             background: ${color.light};
-         }
-         nav {
-            box-sizing: border-box;
-          	position: relative;
-            height: calc(${navHeight} + 10px);
-            width: 100%;
-            display: -webkit-box;
-            display: -webkit-flex;
-            display: -moz-box;
-            display: -ms-flexbox;
-            display: flex;
-            -webkit-box-orient: horizontal;
-            -webkit-box-direction: normal;
-            -webkit-flex-direction: row;
-               -moz-box-orient: horizontal;
-               -moz-box-direction: normal;
-                -ms-flex-direction: row;
-                    flex-direction: row;
-            -webkit-box-align: center;
-            -webkit-align-items: center;
-               -moz-box-align: center;
-                -ms-flex-align: center;
-                    align-items: center;
-            border-bottom: 1px ${color.light} solid;
-         }
-         nav .history {
-           position: relative;
-           height: ${navHeight};
-         }
-         nav .history button {
-           position: relative;
-           height: ${navHeight};
-           width: ${navHeight};
-           -webkit-border-radius: 50%;
-              -moz-border-radius: 50%;
-                   border-radius: 50%;
-           margin-left: 2px;
-         }
-         nav .bookmarks {
-           position: relative;
-           margin-left: 5px;
-           padding-left: 5px;
-           border-left: 1px ${color.light} solid;
-         }
-         nav .bookmarks button {
-           position: relative;
-           height: ${navHeight};
-           -webkit-border-radius: 20px;
-              -moz-border-radius: 20px;
-                   border-radius: 20px;
-           margin-left: 2px;
-         }
-        `)
-            );
+                :host {
+                    box-sizing: border-box;
+                    display: block;
+                    height: -webkit-calc(100vh - ${navHeight});
+                    height: -moz-calc(100vh - ${navHeight});
+                    height: calc(100vh - ${navHeight});
+                    width: 100%;
+                    padding: 0px;
+                    margin: 0px;
+                }
+                .root {
+                    box-sizing: border-box;
+                  	 position: relative;
+                    height: 100%;
+                    padding: 0px;
+                    margin: 0px;
+                }
+                .markdown-body {
+                    box-sizing: border-box;
+                  	 position: absolute;
+                    overflow-y: auto;
+                    height: -webkit-calc(100% - ${navHeight} - 10px);
+                    height: -moz-calc(100% - ${navHeight} - 10px);
+                    height: calc(100% - ${navHeight} - 10px);
+                    width: 100%;
+                }
+                button {
+                    background: ${color.dark};
+                    border: 1px white solid;
+                    color: white;
+                }
+                button:focus {
+                	  outline: none;
+                }
+                button:hover {
+                    border: 1px ${color.dark} solid;
+                    color: ${color.dark};
+                    background: transparent;
+                }
+                button:disabled {
+                   background: ${color.light};
+                }
+                button:disabled :hover {
+                    border: 1px white solid;
+                    color: white;
+                    background: ${color.light};
+                }
+                nav {
+                   box-sizing: border-box;
+                 	position: relative;
+                   height: calc(${navHeight} + 10px);
+                   width: 100%;
+                   display: -webkit-box;
+                   display: -webkit-flex;
+                   display: -moz-box;
+                   display: -ms-flexbox;
+                   display: flex;
+                   -webkit-box-orient: horizontal;
+                   -webkit-box-direction: normal;
+                   -webkit-flex-direction: row;
+                      -moz-box-orient: horizontal;
+                      -moz-box-direction: normal;
+                       -ms-flex-direction: row;
+                           flex-direction: row;
+                   -webkit-box-align: center;
+                   -webkit-align-items: center;
+                      -moz-box-align: center;
+                       -ms-flex-align: center;
+                           align-items: center;
+                   border-bottom: 1px ${color.light} solid;
+                }
+                nav .history {
+                  position: relative;
+                  height: ${navHeight};
+                }
+                nav .history button {
+                  position: relative;
+                  height: ${navHeight};
+                  width: ${navHeight};
+                  -webkit-border-radius: 50%;
+                     -moz-border-radius: 50%;
+                          border-radius: 50%;
+                  margin-left: 2px;
+                }
+                nav .bookmarks {
+                  position: relative;
+                  margin-left: 5px;
+                  padding-left: 5px;
+                  border-left: 1px ${color.light} solid;
+                }
+                nav .bookmarks button {
+                  position: relative;
+                  height: ${navHeight};
+                  -webkit-border-radius: 20px;
+                     -moz-border-radius: 20px;
+                          border-radius: 20px;
+                  margin-left: 2px;
+                }
+            `)
+           );
             this.navigation = document.createElement("nav");
             if (this.getAttribute("navigation") !== "none") {
                 root.append(this.navigation);
@@ -200,7 +193,7 @@ window.customElements.define(
                         const intervalID = setInterval(() => {
                             if (this.history !== undefined) {
                                 const run = () => {
-                                    bookmark.disabled =
+                                    bookmark.disabled = 
                                         this.history.entries[this.history.index].pathname === path;
                                 };
 
@@ -288,18 +281,22 @@ window.customElements.define(
         }
 
         constructUrl(assetURI) {
-            const url = `https://api.github.com/repos/${this.getAttribute(
-        "user"
-      )}/${this.getAttribute(
-        "repository"
-      )}/contents/${assetURI}?ref=${this.getAttribute("branch")}`;
+            const url = `https://api.github.com/repos/${
+                this.getAttribute("user")
+            }/${
+                this.getAttribute("repository")
+            }/contents/${
+                assetURI
+            }?ref=${
+                this.getAttribute("branch")
+            }`;
             return url;
         }
         loadPage(assetURI) {
             const assetType =
-                assetURI.lastIndexOf(".") > 0 ?
-                assetURI.substring(assetURI.lastIndexOf(".") + 1).toLowerCase() :
-                "plaintext";
+                assetURI.lastIndexOf(".") > 0 
+                    ? assetURI.substring(assetURI.lastIndexOf(".") + 1).toLowerCase() 
+                    : "plaintext";
             const url = this.constructUrl(assetURI);
             fetch(url)
                 .then(res => res.json())
@@ -314,7 +311,7 @@ window.customElements.define(
 \`\`\`${assetType}
 ${strBody}
 \`\`\`
-            `);
+                           `);
                     }
                 });
         }
@@ -325,11 +322,9 @@ ${strBody}
                 hljs.highlightBlock(el);
             });
             this.renderer.querySelectorAll("img,a").forEach(el => {
-                if (
-                    el.getAttribute("src") &&
-                    !el.getAttribute("src").startsWith("http")
-                ) {
-                    fetch(this.constructUrl(el.getAttribute("src")))
+                if (el.getAttribute("src") && !el.getAttribute("src").startsWith("http")) {
+                    const url = this.constructUrl(el.getAttribute("src"));
+                    fetch(url)
                         .then(res => res.json())
                         .then(body => {
                             el.setAttribute("src", `data:img/png;base64,${body.content}`);
