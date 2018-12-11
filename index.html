@@ -108,20 +108,26 @@
 </head>
 <body>
     <script>
-        const args = location.search.split('&').reduce((res, str) => {
-            const [key, value] = str.split('=');
-            res[key] = decodeURI(value);
+        const args = ['user', 'repository', 'bookmarks'].reduce((res, k) => {
+            res[k] = window.localStorage.getItem(k);
             return res;
         }, {});
+        const updateProps = el => {
+            window.localStorage.setItem('user', el.querySelector('#user').value);
+            window.localStorage.setItem('repository', el.querySelector('#repository').value);
+            window.localStorage.setItem('bookmarks', el.querySelector('#bookmarks').value);
+            window.location.reload();
+            return false;
+        }
     </script>
     <header>
         <script>
             document.write(`
-            <form>
-                <input id="user" type="text" name="user" ${args.user ? `value="${args.user}"` : `placeholder="Olian04"`}>
-                <input id="repository" type="text" name="repository" ${args.repository ? `value="${args.repository}"` : `placeholder="github-readme"`}>
+            <form onsubmit="return updateProps(this);">
+                <input id="user" type="text" ${args.user ? `value="${args.user}"` : `placeholder="Olian04"`}>
+                <input id="repository" type="text" ${args.repository ? `value="${args.repository}"` : `placeholder="github-readme"`}>
                 <br>
-                <input id="bookmarks" type="text" name="bookmarks" ${args.bookmarks ? `value="${args.bookmarks}"` : `placeholder="[Home](/README.md);[License](/LICENSE);[Demo](/index.html)"`}>
+                <input id="bookmarks" type="text" ${args.bookmarks ? `value="${args.bookmarks}"` : `placeholder="[Home](/README.md);[License](/LICENSE);[Demo](/index.html)"`}>
                 <br>
                 <input id="submit" type="submit" value="Load readme">
             </form>
