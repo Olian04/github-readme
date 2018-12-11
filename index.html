@@ -57,10 +57,12 @@
             margin: 0px;
             display: grid;
             grid-template-columns: 1fr 5fr 1fr;
-            grid-template-rows: 1fr 9fr;
+            grid-template-rows: 20px 1fr 9fr 20px;
             grid-template-areas: 
+                ". . ."
                 ". header ."
-                ". content .";
+                ". content ."
+                ". . .";
         }
         header {
             position: relative;
