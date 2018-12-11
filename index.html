@@ -64,6 +64,17 @@
                 ". content ."
                 ". . .";
         }
+        @media(max-width: 992px) {
+            body {
+                grid-template-columns: 20px 1fr 20px;
+                grid-template-rows: 20px 1fr 9fr 20px;
+                grid-template-areas: 
+                ". header ."
+                ". header ."
+                "content content content"
+                "content content content";
+            }
+        }
         header {
             position: relative;
             grid-area: header;
