@@ -1,0 +1,346 @@
+<script 
+  src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"></script>
+<script  
+  src="https://cdnjs.cloudflare.com/ajax/libs/history/4.7.2/history.min.js"></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+<template id="github-readme-template">
+  <link 
+    rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.10.0/github-markdown.min.css" 
+    />
+  <link 
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css" 
+    />
+  <style>
+    :host {
+      --color-light: #dfe2e5;
+      --color-dark: #4F4F4F;
+      --nav-height: 25px;
+
+      box-sizing: border-box;
+      display: block;
+      height: -webkit-calc(100vh - var(--nav-height));
+      height: -moz-calc(100vh - var(--nav-height));
+      height: calc(100vh - var(--nav-height));
+      width: 100%;
+      padding: 0px;
+      margin: 0px;
+    }
+    .root {
+      box-sizing: border-box;
+      position: relative;
+      height: 100%;
+      padding: 0px;
+      margin: 0px;
+    }
+    .markdown-body {
+      box-sizing: border-box;
+      position: absolute;
+      overflow-y: auto;
+      height: -webkit-calc(100% - var(--nav-height) - 10px);
+      height: -moz-calc(100% - var(--nav-height) - 10px);
+      height: calc(100% - var(--nav-height) - 10px);
+      width: 100%;
+    }
+    button {
+      background: var(--color-dark);
+      border: 1px white solid;
+      color: white;
+    }
+    button:focus {
+      outline: none;
+    }
+    button:hover {
+      border: 1px var(--color-dark) solid;
+      color: ${color.dark};
+      background: transparent;
+    }
+    button:disabled {
+      background: var(--color-light);
+    }
+    button:disabled :hover {
+      border: 1px white solid;
+      color: white;
+      background: var(--color-light);
+    }
+    nav {
+      box-sizing: border-box;
+      position: relative;
+      height: calc(var(--nav-height) + 10px);
+      width: 100%;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-orient: horizontal;
+      -webkit-box-direction: normal;
+      -webkit-flex-direction: row;
+      -moz-box-orient: horizontal;
+      -moz-box-direction: normal;
+      -ms-flex-direction: row;
+      flex-direction: row;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      -moz-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      border-bottom: 1px var(--color-light) solid;
+    }
+    nav .history {
+      position: relative;
+      height: var(--nav-height);
+    }
+    nav .history button {
+      position: relative;
+      height: var(--nav-height);
+      width: var(--nav-height);
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      border-radius: 50%;
+      margin-left: 2px;
+    }
+    nav .bookmarks {
+      position: relative;
+      margin-left: 5px;
+      padding-left: 5px;
+      border-left: 1px var(--color-light) solid;
+    }
+    nav .bookmarks button {
+      position: relative;
+      height: var(--nav-height);
+      -webkit-border-radius: 20px;
+      -moz-border-radius: 20px;
+      border-radius: 20px;
+      margin-left: 2px;
+    }
+  </style>
+  <div class="root">
+    <nav></nav>
+    <renderer class="markdown-body"></renderer>
+  </div>
+</template>
+
+<script>
+const currentScript = document.currentScript;
+window.customElements.define('github-readme', 
+  class extends HTMLElement {
+    constructor() {
+      super();
+    }
+
+    connectedCallback() {
+      this.prepareAttributes();
+
+      const template = currentScript.ownerDocument
+        .querySelector('#github-readme-template');
+
+      const shadowRoot = this.attachShadow({
+        mode: 'open'
+      });
+      shadowRoot.appendChild(template.content.cloneNode(true));
+
+      this.navigation = shadowRoot.querySelectorAll('nav')[0];
+      if (this.getAttribute('navigation') === 'none') {
+        this.navigation.style.display = 'none';
+      }
+
+      const historyNavigation = document.createElement('div');
+      historyNavigation.className = 'history';
+      this.navigation.append(historyNavigation);
+
+      const backButton = document.createElement('button');
+      historyNavigation.append(backButton);
+      backButton.innerText = '<';
+      backButton.onclick = () => {
+        this.history.goBack();
+      };
+
+      const forwardButton = document.createElement('button');
+      historyNavigation.append(forwardButton);
+      forwardButton.innerText = '>';
+      forwardButton.onclick = () => {
+        this.history.goForward();
+      };
+
+      const reloadButton = document.createElement('button');
+      historyNavigation.append(reloadButton);
+      reloadButton.innerText = '↻';
+      reloadButton.onclick = () => {
+        this.history.replace(this.history.entries[this.history.index]); // Reloads the current page
+      };
+
+      if (this.getAttribute('navigation') === 'full') {
+        const bookmarks = document.createElement('div');
+        bookmarks.className = 'bookmarks';
+        this.navigation.append(bookmarks);
+
+        this.getAttribute('bookmarks')
+          .split(';')
+          .reduce((res, v) => (v ? [...res, v] : res), [])
+          .map(md => {
+            // [License](/LICENSE);[Demo](/index.html)
+            const match = /^\[(.*?)\]\((.*?)\)$/gim.exec(md);
+            return [match[1], match[2]];
+          })
+          .forEach(([title, path]) => {
+            const bookmark = document.createElement('button');
+            bookmark.innerText = title;
+            bookmark.onclick = () => {
+              if (this.history.entries[this.history.index].pathname === path) {
+                // Don't need to navigate to the page you're already on
+                return;
+              }
+              this.history.push(path);
+            };
+            const intervalID = setInterval(() => {
+              if (this.history !== undefined) {
+                const run = () => {
+                  bookmark.disabled = 
+                    this.history.entries[this.history.index].pathname === path;
+                };
+
+                this.history.listen(run);
+                run();
+                clearInterval(intervalID);
+              }
+            }, 33);
+            bookmarks.append(bookmark);
+          });
+      }
+
+      this.renderer = shadowRoot.querySelectorAll('renderer')[0];
+
+      const intervalID = setInterval(() => {
+        let shouldRun = false;
+        try {
+          if (
+            showdown !== undefined &&
+            window.History.createMemoryHistory !== undefined &&
+            hljs.initHighlightingOnLoad !== undefined
+            ) {
+            clearInterval(intervalID);
+            shouldRun = true;
+          }
+        } catch (e) {}
+
+        if (shouldRun) {
+          // Needs to be outside of the try catch, since its used to discard errors.
+          run();
+        }
+      }, 33);
+      const run = () => {
+        this.converter = new showdown.Converter();
+        this.converter.setOption('tables', true);
+        this.converter.setOption('ghCodeBlocks', true);
+        this.converter.setOption('emoji', true);
+        this.converter.setOption('simplifiedAutoLink', true);
+        this.history = window.History.createMemoryHistory();
+        this.history.listen((location, action) => {
+          // location is an object like window.location
+          backButton.disabled = !this.history.canGo(-1);
+          forwardButton.disabled = !this.history.canGo(1);
+          this.loadPage(location.pathname);
+        });
+        this.history.replace(this.getAttribute('index'));
+      };
+    }
+
+    prepareAttributes() {
+      // TODO: Add error handling for invalid attribute values
+      if (!this.hasAttribute('user')) {
+        throw Error(
+          'Attribute "user" is required. Please provide a valid github username.'
+        );
+      }
+      if (!this.hasAttribute('repository')) {
+        throw Error(
+          'Attribute "repository" is required. Please provide a valid github repository owned by the provided user.'
+        );
+      }
+      if (!this.hasAttribute('branch')) {
+        this.setAttribute('branch', 'master');
+      }
+      if (!this.hasAttribute('navigation')) {
+        this.setAttribute('navigation', 'full');
+      }
+      if (!this.hasAttribute('bookmarks')) {
+        this.setAttribute('bookmarks', '');
+      }
+      if (!this.hasAttribute('index')) {
+        this.setAttribute('index', 'README.md');
+      }
+    }
+
+    constructUrl(assetURI) {
+      const url = `https://api.github.com/repos/${
+          this.getAttribute('user')
+        }/${
+          this.getAttribute('repository')
+        }/contents/${
+          assetURI
+        }?ref=${
+          this.getAttribute('branch')
+        }`;
+      return url;
+    }
+    loadPage(assetURI) {
+      const assetType =
+        assetURI.lastIndexOf('.') > 0 
+          ? assetURI.substring(assetURI.lastIndexOf('.') + 1).toLowerCase() 
+          : 'plaintext';
+      const url = this.constructUrl(assetURI);
+      fetch(url)
+        .then(res => res.json())
+        .then(body => {
+      const strBody = atob(body.content);
+      switch (assetType) {
+        case 'md':
+          this.renderMarkdown(strBody);
+          break;
+        default:
+          this.renderMarkdown(`
+\`\`\`${assetType}
+${strBody}
+\`\`\`
+          `);
+        }
+      });
+    }
+    renderMarkdown(md) {
+      this.renderer.innerHTML = this.converter.makeHtml(md);
+      hljs.initHighlightingOnLoad();
+      this.renderer.querySelectorAll('pre code').forEach(el => {
+        hljs.highlightBlock(el);
+      });
+      this.renderer.querySelectorAll('img,a').forEach(el => {
+        if (el.getAttribute('src') && !el.getAttribute('src').startsWith('http')) {
+          const url = this.constructUrl(el.getAttribute('src'));
+          fetch(url)
+            .then(res => res.json())
+            .then(body => {
+              el.setAttribute('src', `data:img/png;base64,${body.content}`);
+            });
+        }
+        if (el.getAttribute('href')) {
+          if (el.getAttribute('href').startsWith('http')) {
+            // External path
+            el.onclick = ev => {
+              ev.preventDefault();
+              window.open(el.getAttribute('href'), 'noopener');
+            };
+          } else {
+            // Relative path
+            el.onclick = ev => {
+              ev.preventDefault();
+              this.history.push(el.getAttribute('href'));
+            };
+          }
+        }
+      });
+    }
+  }
+);
+</script>
