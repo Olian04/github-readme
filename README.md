@@ -2,7 +2,7 @@
 A custom element that renders the readme of a github repository
 
 ```html
-<script src="https://unpkg.com/@olian/github-readme"></script>
+<link rel="import" href="https://unpkg.com/@olian/github-readme" />
 <github-readme
     user="olian04"
     repository="github-readme"
