@@ -13,9 +13,13 @@ A custom element that renders the readme of a github repository
 
 Or [click here to see a multi page demo in a jsfiddle](https://jsfiddle.net/cLyum7jr/33/)
 
+__Help me help you:__ <a href="https://www.buymeacoffee.com/fEvx1NCoS" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
+
 ## Install
 
-[`npm install @olian/github-readme`](https://www.npmjs.com/package/@olian/github-readme)
+__NPM:__ [`npm install @olian/github-readme`](https://www.npmjs.com/package/@olian/github-readme)
+
+__CDN:__ `<script src="https://unpkg.com/@olian/github-readme"></script>`
 
 ## Advanced
 
