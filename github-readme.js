@@ -13,24 +13,31 @@ window.customElements.define("github-readme",
             const root = document.createElement("div");
             root.className = "root";
 
-            const markdownScript = document.createElement("script");
-            markdownScript.src = "https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js";
-            markdownScript.async = false;
-            const historyScript = document.createElement("script");
-            historyScript.src = "https://cdnjs.cloudflare.com/ajax/libs/history/4.7.2/history.min.js";
-            historyScript.async = false;
-            const highlightScript = document.createElement("script");
-            highlightScript.src = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js";
-            highlightScript.async = false;
-
-            const githubStyles = document.createElement("link");
-            githubStyles.rel = "stylesheet";
-            githubStyles.href = "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.10.0/github-markdown.min.css";
-            const highlightStyles = document.createElement("link");
-            highlightStyles.rel = "stylesheet";
-            highlightStyles.href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css";
+            const genScript = (src, sri) => {
+                const script = document.createElement("script");
+                script.src = src
+                script.async = false;
+                script.integrity = sri;
+                script.crossOrigin = "anonymous";
+                return script;
+            };
+            
+            const genStyle = (src, sri) => {
+                const style = document.createElement("link");
+                style.rel = "stylesheet";
+                style.href = src
+                style.integrity = sri;
+                style.crossOrigin = "anonymous";
+                return style;
+            };
+            
+            const markdownScript = genScript("https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js", "sha256-LSUpTY0kkXGKvcBC9kbmgibmx3NVVgJvAEfTZbs51mU=")
+            const historyScript = genScript("https://cdnjs.cloudflare.com/ajax/libs/history/4.9.0/history.min.js", "sha256-MuBtHI2giF+TT2E9FjNxVovCaSkndV8cq59ddt915Co=")
+            const highlightScript = genScript("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js", "sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=")
+            const githubStyles = genStyle("https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/3.0.1/github-markdown.min.css", "sha256-HbgiGHMLxHZ3kkAiixyvnaaZFNjNWLYKD/QG6PWaQPc=")
+            const highlightStyles = genStyle("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css", "sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=")
+            
             const style = document.createElement("style");
-            style.type = "text/css";
             
             const color = {
                 light: "#dfe2e5",
